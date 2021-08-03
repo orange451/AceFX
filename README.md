@@ -16,7 +16,7 @@ allprojects {
 }
 
 dependencies {
-	implementation 'com.github.orange451:AceFX:Tag'
+	implementation 'com.github.orange451:AceFX:main-SNAPSHOT'
 }
 ```
 
@@ -33,6 +33,6 @@ Maven:
 <dependency>
     <groupId>com.github.orange451</groupId>
     <artifactId>AceFX</artifactId>
-    <version>Tag</version>
+    <version>main-SNAPSHOT</version>
 </dependency>
 ```
