@@ -55,11 +55,14 @@ public final class AceEditor extends Control {
 	// web engine to process java script
 	private WebEngine mWebEngine;
 
-	// text used to construct the ace editor
+	// cached vars
 	private String cachedText;
+	private ModeData cachedModeData;
+	private ThemeData cachedTheme;
 
 	// Indices weather the web view is loaded
 	private boolean isWebViewReady;
+	
 
 	/**
 	 * Constructor
@@ -83,7 +86,10 @@ public final class AceEditor extends Control {
 	 */
 	private void initialize(String text) {
 		// setup view
-		this.cachedText = text;
+		this.setText(text);
+		this.setMode(Modes.Text);
+		this.setTheme(Themes.Eclipse);
+		
 		this.webView = new WebView();
 		this.webView.prefWidthProperty().bind(this.widthProperty());
 		this.webView.prefHeightProperty().bind(this.heightProperty());
@@ -106,8 +112,8 @@ public final class AceEditor extends Control {
 					isWebViewReady = true;
 
 					setEventCatchers(editor);
-					setTheme(Themes.Chrome);
-					setMode(Modes.Text);
+					setTheme(cachedTheme);
+					setMode(cachedModeData);
 					getSession().setValue(cachedText);
 
 					fireEvent(new Event(AceEvents.onLoadEvent));
@@ -231,6 +237,9 @@ public final class AceEditor extends Control {
 	 * @param text the content to display.
 	 */
 	public void setText(String text) {
+		if ( text == null )
+			text = "";
+		text = text.replace("\r", "");
 		this.cachedText = text;
 
 		if (isWebViewReady)
@@ -324,7 +333,9 @@ public final class AceEditor extends Control {
 	 * @param mode Mode like "ace/mode/java".
 	 */
 	public void setMode(ModeData mode) {
-		getEditor().getSession().setMode(mode.getAlias());
+		cachedModeData = mode;
+		if ( isWebViewReady )
+			getEditor().getSession().setMode(mode.getAlias());
 	}
 
 	/**
@@ -334,6 +345,9 @@ public final class AceEditor extends Control {
 	 * @return the current mode.
 	 */
 	public ModeData getMode() {
+		if ( !isWebViewReady )
+			return this.cachedModeData;
+		
 		return Modes.getModeByAlias(getSession().getMode());
 	}
 
@@ -345,7 +359,9 @@ public final class AceEditor extends Control {
 	 * @param theme Theme to set (must contain valid alias).
 	 */
 	public void setTheme(ThemeData theme) {
-		getEditor().setTheme(theme.getAlias());
+		cachedTheme = theme;
+		if ( isWebViewReady )
+			getEditor().setTheme(theme.getAlias());
 	}
 
 	/**
@@ -354,6 +370,9 @@ public final class AceEditor extends Control {
 	 * @return
 	 */
 	public ThemeData getTheme() {
+		if ( !isWebViewReady )
+			return this.cachedTheme;
+		
 		return Themes.getThemeByAlias(getEditor().getTheme());
 	}
 

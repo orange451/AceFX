@@ -11,6 +11,7 @@ public class CodeEditorTest extends Application {
 	public void start(Stage stage) {
 		AceEditor codeEditor = new AceEditor();
 		codeEditor.setText("public static void main(String[] args) {\n\tSystem.out.println(\"Hello World\");\n}");
+		codeEditor.setMode(Modes.Java);
 		//codeEditor.setSyntax(CodeSyntax.JAVA);
 		
 		stage.setScene(new Scene(codeEditor, 320, 240));
