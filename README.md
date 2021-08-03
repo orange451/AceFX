@@ -7,7 +7,7 @@ See https://ace.c9.io/
 Add to your project:
 
 Gradle:
-```
+```json
 	allprojects {
 		repositories {
 			...
@@ -22,7 +22,7 @@ Gradle:
 
 
 Maven:
-```
+```xml
 	<repositories>
 		<repository>
 		    <id>jitpack.io</id>
