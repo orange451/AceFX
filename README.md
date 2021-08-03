@@ -7,7 +7,7 @@ See https://ace.c9.io/
 Add to your project:
 
 Gradle:
-```json
+```gradle
 	allprojects {
 		repositories {
 			...
