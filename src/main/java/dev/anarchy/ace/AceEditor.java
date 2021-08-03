@@ -124,6 +124,10 @@ public final class AceEditor extends Control {
 			}
 		});
 	}
+	
+	public void setOnLoad(EventHandler<Event> eventHandler) {
+		this.addEventHandler(AceEvents.onLoadEvent, eventHandler);
+	}
 
 	/**
 	 * Loads the ACE editor in the web engine.
@@ -188,6 +192,10 @@ public final class AceEditor extends Control {
 	 */
 	public Object executeScript(String script) throws JSException {
 		return mWebEngine.executeScript(script);
+	}
+	
+	public boolean isWebViewReady() {
+		return this.isWebViewReady;
 	}
 
 	/**
@@ -258,8 +266,6 @@ public final class AceEditor extends Control {
 	 */
 	public void undo() {
 		getEditor().undo();
-		// undoButton.setDisable(!getUndoManager().hasUndo());
-		// redoButton.setDisable(!getUndoManager().hasRedo());
 	}
 
 	/**
@@ -267,8 +273,6 @@ public final class AceEditor extends Control {
 	 */
 	public void redo() {
 		getEditor().redo();
-		// undoButton.setDisable(!getUndoManager().hasUndo());
-		// redoButton.setDisable(!getUndoManager().hasRedo());
 	}
 
 	/**
