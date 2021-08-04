@@ -3,9 +3,12 @@ Ace Code Editor Wrapper For JavaFX
 
 See https://ace.c9.io/
 
+# About
 
-Add to your project:
+This has a few modifications to ace. Mainly for fixing buggy java-fx copy/paste bridge code. This project is a little hacky internally but should functional well on both windows and mac.
 
+
+# Add to your project:
 Gradle:
 ```gradle
 allprojects {
