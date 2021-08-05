@@ -13,7 +13,6 @@ import dev.anarchy.ace.util.Commons;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
-import javafx.concurrent.Worker.State;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Control;
@@ -28,15 +27,7 @@ import netscape.javascript.JSObject;
 
 /**
  * A fully functional self-sufficient code editor based on ACE. <br/>
- * <br/>
- * <b>Hints</b>:
- * <ul>
- * <li>To create a new editor: <code>AceEditor.createNew()</code></li>
- * <li>To listen to events:
- * <code>addEventHandler(AceEvents.YOUR_EVENT, YOUR_EVENT_HANDLER)</code></li>
- * </ul>
- *
- * @author Sudipto Chandra.
+ * @author Sudipto Chandra and Andrew Hamilton.
  */
 public final class AceEditor extends Control {
 
@@ -45,9 +36,6 @@ public final class AceEditor extends Control {
 
 	// current editor
 	private Editor mEditor;
-
-	// file path to save code
-	private File mFilePath;
 
 	// web view where editor is loaded
 	private WebView webView;
@@ -115,11 +103,11 @@ public final class AceEditor extends Control {
 					setTheme(cachedTheme);
 					setMode(cachedModeData);
 					getSession().setValue(cachedText);
-
-					fireEvent(new Event(AceEvents.onLoadEvent));
 					
 					JSObject window = (JSObject) mWebEngine.executeScript("window");
 				    window.setMember("java", new AceEditorJavaBridge(AceEditor.this));
+
+					fireEvent(new Event(AceEvents.onLoadEvent));
 				}
 			}
 		});
