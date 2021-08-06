@@ -1,13 +1,11 @@
 # AceFX
-Ace Code Editor Wrapper For JavaFX
+Ace Code Editor Wrapper For JavaFX. See https://ace.c9.io/
 
 [![](https://jitpack.io/v/orange451/AceFX.svg)](https://jitpack.io/#orange451/AceFX)
 
-See https://ace.c9.io/
-
 # About
 
-This has a few modifications to ace. Mainly for fixing buggy java-fx copy/paste bridge code. This project is a little hacky internally but should functional well on both windows and mac.
+This project contains a few modifications to the base code for ace editor. These changes are done to force a bridge in to Java for copying/pasting. AceFX works by wrapping Ace editor inside a web-view, but by default this means ace is prone to java's garbage collection. Some efforts are made to ensure none of the core ace features are garbage collected.
 
 
 # Add to your project:
