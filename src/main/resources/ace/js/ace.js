@@ -11627,6 +11627,12 @@ exports.commands = [{
     exec: function(editor) { editor.selectAll(); },
     readOnly: true
 }, {
+    name: "copy-custom",
+    description: "Like Copy but for Java",
+    bindKey: bindKey("Ctrl-C", "Command-C"),
+    exec: function(editor) { java.copy(editor.getSelectedText()); },
+    readOnly: true
+}, {
     name: "centerselection",
     description: "Center selection",
     bindKey: bindKey(null, "Ctrl-L"),
@@ -12027,8 +12033,7 @@ exports.commands = [{
 }, {
     name: "copy",
     description: "Copy",
-    exec: function(editor) {
-    },
+    exec: function(editor) { java.copy(editor.getSelectedText()); },
     readOnly: true
 },
 {
