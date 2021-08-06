@@ -1,6 +1,7 @@
 # AceFX
-[![](https://jitpack.io/v/orange451/AceFX.svg)](https://jitpack.io/#orange451/AceFX)
 Ace Code Editor Wrapper For JavaFX
+
+[![](https://jitpack.io/v/orange451/AceFX.svg)](https://jitpack.io/#orange451/AceFX)
 
 See https://ace.c9.io/
 
