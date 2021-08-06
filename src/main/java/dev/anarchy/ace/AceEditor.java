@@ -72,6 +72,7 @@ public final class AceEditor extends Control {
 	/**
 	 * Initializes view
 	 */
+	private AceEditorJavaBridge bridge; // This needs to be its own field to prevent garbage collecting
 	private void initialize(String text) {
 		// setup view
 		this.setText(text);
@@ -105,7 +106,7 @@ public final class AceEditor extends Control {
 					getSession().setValue(cachedText);
 					
 					JSObject window = (JSObject) mWebEngine.executeScript("window");
-				    window.setMember("java", new AceEditorJavaBridge(AceEditor.this));
+				    window.setMember("java", bridge = new AceEditorJavaBridge(AceEditor.this));
 
 					fireEvent(new Event(AceEvents.onLoadEvent));
 				}
