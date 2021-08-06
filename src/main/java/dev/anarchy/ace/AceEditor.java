@@ -133,9 +133,10 @@ public final class AceEditor extends Control {
 	 *
 	 * @param editor
 	 */
+	private AceEvents aceEvents; // Prevent garbage collecting
 	private void setEventCatchers(JSObject editor) {
 		// set interface object
-		editor.setMember("mAceEvent", new AceEvents(this));
+		editor.setMember("mAceEvent", aceEvents = new AceEvents(this));
 
 		// on editor events
 		editor.eval("this.on('blur', function() { editor.mAceEvent.onBlur(); });");
@@ -163,14 +164,6 @@ public final class AceEditor extends Control {
 		editor.eval("this.getSession().on('changeWrapMode', function() { editor.mAceEvent.onChangeWrapMode(); });");
 		editor.eval(
 				"this.getSession().on('tokenizerUpdate', function(e) { editor.mAceEvent.onTokenizerUpadate(e); });");
-
-		addEventHandler(AceEvents.onChangeEvent, new EventHandler<Event>() {
-			@Override
-			public void handle(Event event) {
-				// undoButton.setDisable(!getUndoManager().hasUndo());
-				// redoButton.setDisable(!getUndoManager().hasRedo());
-			}
-		});
 	}
 
 	/**
