@@ -1,6 +1,5 @@
 package dev.anarchy.ace;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import dev.anarchy.ace.model.Command;
@@ -72,6 +71,7 @@ public final class AceEditor extends Control {
 	/**
 	 * Initializes view
 	 */
+	@SuppressWarnings("unused")
 	private AceEditorJavaBridge bridge; // This needs to be its own field to prevent garbage collecting
 	private void initialize(String text) {
 		// setup view
@@ -89,27 +89,24 @@ public final class AceEditor extends Control {
 		loadAceEditor();
 
 		// process page loading
-		mWebEngine.getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
-			@Override
-			public void changed(ObservableValue<? extends Worker.State> ov, Worker.State t, Worker.State t1) {
-				if (mWebEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
-					// extract javascript objects
-					mAce = (JSObject) mWebEngine.executeScript("ace");
-					JSObject editor = (JSObject) mAce.call("edit", "editor");
-					mEditor = new Editor(editor);
+		mWebEngine.getLoadWorker().stateProperty().addListener((ObservableValue<? extends Worker.State> ov, Worker.State t, Worker.State t1) -> {
+			if (mWebEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
+				// extract javascript objects
+				mAce = (JSObject) mWebEngine.executeScript("ace");
+				JSObject editor = (JSObject) mAce.call("edit", "editor");
+				mEditor = new Editor(editor);
 
-					isWebViewReady = true;
+				isWebViewReady = true;
 
-					setEventCatchers(editor);
-					setTheme(cachedTheme);
-					setMode(cachedModeData);
-					getSession().setValue(cachedText);
-					
-					JSObject window = (JSObject) mWebEngine.executeScript("window");
-				    window.setMember("java", bridge = new AceEditorJavaBridge(AceEditor.this));
+				setEventCatchers(editor);
+				setTheme(cachedTheme);
+				setMode(cachedModeData);
+				getSession().setValue(cachedText);
+				
+				JSObject window = (JSObject) mWebEngine.executeScript("window");
+			    window.setMember("java", bridge = new AceEditorJavaBridge(AceEditor.this));
 
-					fireEvent(new Event(AceEvents.onLoadEvent));
-				}
+				fireEvent(new Event(AceEvents.onLoadEvent));
 			}
 		});
 	}
@@ -133,6 +130,7 @@ public final class AceEditor extends Control {
 	 *
 	 * @param editor
 	 */
+	@SuppressWarnings("unused")
 	private AceEvents aceEvents; // Prevent garbage collecting
 	private void setEventCatchers(JSObject editor) {
 		// set interface object
@@ -152,18 +150,15 @@ public final class AceEditor extends Control {
 		editor.eval("this.getSession().on('changeBackMarker', function() { editor.mAceEvent.onChangeBackMarker(); });");
 		editor.eval("this.getSession().on('changeBreakpoint', function() { editor.mAceEvent.onChangeBreakpoint(); });");
 		editor.eval("this.getSession().on('changeFold', function() { editor.mAceEvent.onChangeFold(); });");
-		editor.eval(
-				"this.getSession().on('changeFrontMarker', function() { editor.mAceEvent.onChangeFrontMarker(); });");
+		editor.eval("this.getSession().on('changeFrontMarker', function() { editor.mAceEvent.onChangeFrontMarker(); });");
 		editor.eval("this.getSession().on('changeMode', function() { editor.mAceEvent.onChangeMode(); });");
 		editor.eval("this.getSession().on('changeOverwrite', function() { editor.mAceEvent.onChangeOverwrite(); });");
-		editor.eval(
-				"this.getSession().on('changeScrollLeft', function(e) { editor.mAceEvent.onChangeScrollLeft(e); });");
+		editor.eval("this.getSession().on('changeScrollLeft', function(e) { editor.mAceEvent.onChangeScrollLeft(e); });");
 		editor.eval("this.getSession().on('changeScrollTop', function(e) { editor.mAceEvent.onChangeScrollTop(e); });");
 		editor.eval("this.getSession().on('changeTabSize', function() { editor.mAceEvent.onChangeTabSize(); });");
 		editor.eval("this.getSession().on('changeWrapLimit', function() { editor.mAceEvent.onChangeWrapLimit(); });");
 		editor.eval("this.getSession().on('changeWrapMode', function() { editor.mAceEvent.onChangeWrapMode(); });");
-		editor.eval(
-				"this.getSession().on('tokenizerUpdate', function(e) { editor.mAceEvent.onTokenizerUpadate(e); });");
+		editor.eval("this.getSession().on('tokenizerUpdate', function(e) { editor.mAceEvent.onTokenizerUpadate(e); });");
 	}
 
 	/**
@@ -176,6 +171,9 @@ public final class AceEditor extends Control {
 		return mWebEngine.executeScript(script);
 	}
 	
+	/**
+	 * Returns whether the web view is loaded.
+	 */
 	public boolean isWebViewReady() {
 		return this.isWebViewReady;
 	}
