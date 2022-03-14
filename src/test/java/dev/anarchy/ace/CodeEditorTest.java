@@ -10,6 +10,7 @@ public class CodeEditorTest extends Application {
 	public void start(Stage stage) {
 		AceEditor codeEditor = new AceEditor();
 		codeEditor.setText("public static void main(String[] args) {\n\tSystem.out.println(\"Hello World\");\n}");
+		codeEditor.setOption("scrollPastEnd", 0.5);
 		codeEditor.setMode(Modes.Java);
 		
 		stage.setScene(new Scene(codeEditor, 320, 240));

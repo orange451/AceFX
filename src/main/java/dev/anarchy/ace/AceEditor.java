@@ -1,6 +1,9 @@
 package dev.anarchy.ace;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import dev.anarchy.ace.model.Command;
 import dev.anarchy.ace.model.EditSession;
@@ -50,6 +53,8 @@ public final class AceEditor extends Control {
 	// Indices weather the web view is loaded
 	private boolean isWebViewReady;
 	
+	// Option map used when view not yet loaded
+	private Map<String, Object> optionMap;
 
 	/**
 	 * Constructor
@@ -61,7 +66,7 @@ public final class AceEditor extends Control {
 	public AceEditor(String text) {
 		if (text == null)
 			text = "";
-
+		
 		setMinSize(0, 0);
 		setPrefSize(200, 200);
 		setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -78,6 +83,8 @@ public final class AceEditor extends Control {
 		this.setText(text);
 		this.setMode(Modes.Text);
 		this.setTheme(Themes.Eclipse);
+
+		this.optionMap = new HashMap<>();
 		
 		this.webView = new WebView();
 		this.webView.prefWidthProperty().bind(this.widthProperty());
@@ -102,6 +109,11 @@ public final class AceEditor extends Control {
 				setTheme(cachedTheme);
 				setMode(cachedModeData);
 				getSession().setValue(cachedText);
+				
+				for (Entry<String, Object> optionSet : optionMap.entrySet()) {
+					System.out.println(optionSet.getKey() + " / " + optionSet.getValue());
+					setOption(optionSet.getKey(), optionSet.getValue());
+				}
 				
 				JSObject window = (JSObject) mWebEngine.executeScript("window");
 			    window.setMember("java", bridge = new AceEditorJavaBridge(AceEditor.this));
@@ -307,6 +319,20 @@ public final class AceEditor extends Control {
 	 */
 	public void showOptions() {
 		getEditor().execCommand("showSettingsMenu");
+	}
+	
+	/**
+	 * Generic set option method for ace. Will cache options if webview is not yet ready.
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public void setOption(String key, Object value) {
+		if ( isWebViewReady ) {
+			getEditor().setOption(key, value);
+		} else {
+			optionMap.put(key, value);
+		}
 	}
 
 	/**

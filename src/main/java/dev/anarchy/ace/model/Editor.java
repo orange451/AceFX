@@ -1146,7 +1146,7 @@ public class Editor {
      *
      * @param speed Required. A value indicating the new speed (in milliseconds)
      */
-    public void setScrollSpeed(Integer speed) throws JSException {
+    public void setScrollSpeed(Double speed) throws JSException {
         mEditor.call("setScrollSpeed", speed);
     }
 
