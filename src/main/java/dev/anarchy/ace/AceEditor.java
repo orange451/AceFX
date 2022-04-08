@@ -12,6 +12,7 @@ import dev.anarchy.ace.model.ModeData;
 import dev.anarchy.ace.model.ThemeData;
 import dev.anarchy.ace.model.UndoManager;
 import dev.anarchy.ace.util.Commons;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -98,27 +99,39 @@ public final class AceEditor extends Control {
 		// process page loading
 		mWebEngine.getLoadWorker().stateProperty().addListener((ObservableValue<? extends Worker.State> ov, Worker.State t, Worker.State t1) -> {
 			if (mWebEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
-				// extract javascript objects
-				mAce = (JSObject) mWebEngine.executeScript("ace");
-				JSObject editor = (JSObject) mAce.call("edit", "editor");
-				mEditor = new Editor(editor);
-
-				isWebViewReady = true;
-
-				setEventCatchers(editor);
-				setTheme(cachedTheme);
-				setMode(cachedModeData);
-				getSession().setValue(cachedText);
-				
-				for (Entry<String, Object> optionSet : optionMap.entrySet()) {
-					System.out.println(optionSet.getKey() + " / " + optionSet.getValue());
-					setOption(optionSet.getKey(), optionSet.getValue());
+				try {
+					Thread.sleep(5);
+					Platform.runLater(()->{
+						try {
+							// extract javascript objects
+							mAce = (JSObject) mWebEngine.executeScript("ace");
+							JSObject editor = (JSObject) mAce.call("edit", "editor");
+							mEditor = new Editor(editor);
+			
+							isWebViewReady = true;
+			
+							setEventCatchers(editor);
+							setTheme(cachedTheme);
+							setMode(cachedModeData);
+							getSession().setValue(cachedText);
+							
+							for (Entry<String, Object> optionSet : optionMap.entrySet()) {
+								System.out.println(optionSet.getKey() + " / " + optionSet.getValue());
+								setOption(optionSet.getKey(), optionSet.getValue());
+							}
+							
+							JSObject window = (JSObject) mWebEngine.executeScript("window");
+						    window.setMember("java", bridge = new AceEditorJavaBridge(AceEditor.this));
+			
+							fireEvent(new Event(AceEvents.onLoadEvent));
+						} catch(Exception e1) {
+							fireEvent(new Event(AceEvents.onLoadFailEvent));
+							e1.printStackTrace();
+						}
+					});
+				} catch(Exception e) {
+					e.printStackTrace();
 				}
-				
-				JSObject window = (JSObject) mWebEngine.executeScript("window");
-			    window.setMember("java", bridge = new AceEditorJavaBridge(AceEditor.this));
-
-				fireEvent(new Event(AceEvents.onLoadEvent));
 			}
 		});
 	}

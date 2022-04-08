@@ -41,6 +41,7 @@ public class AceEvents {
     //
     //AceEditor custom events    
     public static final EventType<? extends Event> onLoadEvent = new EventType<>("onLoad");
+    public static final EventType<? extends Event> onLoadFailEvent = new EventType<>("onLoadFail");
     //Editor event types
     public static final EventType<? extends Event> onBlurEvent = new EventType<>("onBlur");
     public static final EventType<? extends Event> onChangeEvent = new EventType<>("onChange");
